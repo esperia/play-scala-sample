@@ -1,7 +1,8 @@
 package controllers
 
 import javax.inject._
-import play.api._
+//import play.api.db.DB
+import play.api.libs.json.{Json, JsValue}
 import play.api.mvc._
 
 /**
@@ -20,5 +21,41 @@ class HomeController @Inject() extends Controller {
   def index = Action {
     Ok(views.html.index("Your new application is ready."))
   }
+
+  def test = Action {
+    var outString = ""
+//    val conn = DB.getConnection()
+//    try {
+//      val stmt = conn.createStatement
+//      val rs = stmt.executeQuery("SELECT * FROM `users` WHERE 1 ")
+//      while (rs.next()) {
+//        outString += rs.getString("name")
+//      }
+//    } finally {
+//      conn.close()
+//    }
+
+    Ok(outString)
+  }
+
+  val json: JsValue = Json.parse(
+    """
+{
+  "name" : "Watership Down",
+  "location" : {
+    "lat" : 51.235685,
+    "long" : -1.309197
+  },
+  "residents" : [ {
+    "name" : "Fiver",
+    "age" : 4,
+    "role" : null
+  }, {
+    "name" : "Bigwig",
+    "age" : 6,
+    "role" : "Owsla"
+  } ]
+}
+    """)
 
 }
