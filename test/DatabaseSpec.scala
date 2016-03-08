@@ -28,15 +28,11 @@ class DatabaseSpec extends PlaySpec with BeforeAndAfter {
         Logger.info(driver.toString)
       }
     }
-    "Test query" in {
-      try sql"select * from users".toMap.list.apply()
-      catch { case e: Exception =>
-        sql"create table accounts(name varchar(100) not null)".execute.apply()
-        Seq("Alice", "Bob", "Chris").foreach { name =>
-          sql"insert into accounts values ($name)".update.apply()
-        }
-        sql"select * from accounts".toMap.list.apply()
-      }
+    "Fetch users" in {
+      val sql: SQL[Nothing, NoExtractor] = sql"select * from users"
+      val map: SQL[Map[String, Any], HasExtractor] = sql.toMap
+      val list: SQLToList[Map[String, Any], HasExtractor] = map.list
+      val users: List[Map[String, Any]] = list.apply()
     }
   }
 

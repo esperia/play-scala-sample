@@ -24,19 +24,7 @@ class HomeController @Inject() extends Controller {
    * a path of `/`.
    */
   def index = Action {
-        val accounts = {
-          try sql"select * from users".toMap.list.apply()
-          catch { case e: Exception =>
-            sql"create table accounts(name varchar(100) not null)".execute.apply()
-            Seq("Alice", "Bob", "Chris").foreach { name =>
-              sql"insert into accounts values ($name)".update.apply()
-            }
-            sql"select * from accounts".toMap.list.apply()
-          }
-        }
-        Ok(accounts.toString).as("text/html")
-//        Ok("hoge")
-//    Ok(views.html.index("Your new application is ready."))
+    Ok(views.html.index("Your new application is ready."))
   }
 
   def test = Action {
@@ -55,25 +43,5 @@ class HomeController @Inject() extends Controller {
 
     Ok(outString)
   }
-
-  val json: JsValue = Json.parse(
-    """
-{
-  "name" : "Watership Down",
-  "location" : {
-    "lat" : 51.235685,
-    "long" : -1.309197
-  },
-  "residents" : [ {
-    "name" : "Fiver",
-    "age" : 4,
-    "role" : null
-  }, {
-    "name" : "Bigwig",
-    "age" : 6,
-    "role" : "Owsla"
-  } ]
-}
-    """)
 
 }

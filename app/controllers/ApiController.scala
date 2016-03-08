@@ -5,7 +5,7 @@ import javax.inject._
 import scalikejdbc.AutoSession
 
 //import play.api.db.DB
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json.{JsObject, JsValue, Json}
 import play.api.mvc._
 import scalikejdbc._
 
@@ -22,5 +22,12 @@ class ApiController @Inject() extends Controller {
   def action(versions: Integer, identifier: String, action: String) = Action {
     Ok("versions=" + versions + ", identifier=" + identifier + ", action=" + action)
   }
+
+  // TODO
+//  def users() = Action {
+//    val users: List[Map[String, Any]] = sql"select * from users".toMap.list.apply()
+//
+//    Ok(json)
+//  }
 
 }
