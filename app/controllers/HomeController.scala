@@ -1,9 +1,13 @@
 package controllers
 
 import javax.inject._
+
+import scalikejdbc.AutoSession
+
 //import play.api.db.DB
 import play.api.libs.json.{Json, JsValue}
 import play.api.mvc._
+import scalikejdbc._
 
 /**
  * This controller creates an `Action` to handle HTTP requests to the
@@ -11,6 +15,7 @@ import play.api.mvc._
  */
 @Singleton
 class HomeController @Inject() extends Controller {
+  implicit val session = AutoSession
 
   /**
    * Create an Action to render an HTML page with a welcome message.
@@ -19,10 +24,23 @@ class HomeController @Inject() extends Controller {
    * a path of `/`.
    */
   def index = Action {
-    Ok(views.html.index("Your new application is ready."))
+        val accounts = {
+          try sql"select * from users".toMap.list.apply()
+          catch { case e: Exception =>
+            sql"create table accounts(name varchar(100) not null)".execute.apply()
+            Seq("Alice", "Bob", "Chris").foreach { name =>
+              sql"insert into accounts values ($name)".update.apply()
+            }
+            sql"select * from accounts".toMap.list.apply()
+          }
+        }
+        Ok(accounts.toString).as("text/html")
+//        Ok("hoge")
+//    Ok(views.html.index("Your new application is ready."))
   }
 
   def test = Action {
+
     var outString = ""
 //    val conn = DB.getConnection()
 //    try {
